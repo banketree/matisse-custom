@@ -226,8 +226,8 @@ public class MatisseActivity extends AppCompatActivity implements
             }
         } else if (requestCode == REQUEST_CODE_CAPTURE) {
             // Just pass the data back to previous calling Activity.
-            Uri contentUri = mMediaStoreCompat.getCurrentPhotoUri();
-            String path = mMediaStoreCompat.getCurrentPhotoPath();
+            Uri contentUri = mMediaStoreCompat.getCurrentUri();
+            String path = mMediaStoreCompat.getCurrentPath();
             ArrayList<Uri> selected = new ArrayList<>();
             selected.add(contentUri);
             ArrayList<String> selectedPath = new ArrayList<>();

@@ -44,8 +44,8 @@ public class MediaStoreCompat {
     private final WeakReference<Activity> mContext;
     private final WeakReference<Fragment> mFragment;
     private CaptureStrategy mCaptureStrategy;
-    private Uri mCurrentPhotoUri;
-    private String mCurrentPhotoPath;
+    private Uri mCurrentUri;
+    private String mCurrentPath;
 
     public MediaStoreCompat(Activity activity) {
         mContext = new WeakReference<>(activity);
@@ -77,23 +77,23 @@ public class MediaStoreCompat {
         if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                photoFile = createFile(isVideo);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             if (photoFile != null) {
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-                mCurrentPhotoUri = FileProvider.getUriForFile(mContext.get(),
+                mCurrentPath = photoFile.getAbsolutePath();
+                mCurrentUri = FileProvider.getUriForFile(mContext.get(),
                         mCaptureStrategy.authority, photoFile);
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentUri);
                 captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     List<ResolveInfo> resInfoList = context.getPackageManager()
                             .queryIntentActivities(captureIntent, PackageManager.MATCH_DEFAULT_ONLY);
                     for (ResolveInfo resolveInfo : resInfoList) {
                         String packageName = resolveInfo.activityInfo.packageName;
-                        context.grantUriPermission(packageName, mCurrentPhotoUri,
+                        context.grantUriPermission(packageName, mCurrentUri,
                                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
                 }
@@ -107,11 +107,18 @@ public class MediaStoreCompat {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private File createImageFile() throws IOException {
+    private File createFile(boolean isVideo) throws IOException {
         // Create an image file name
         String timeStamp =
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = String.format("JPEG_%s.jpg", timeStamp);
+        String outFileName = "";
+
+        if (isVideo) {
+            outFileName = String.format("Video_%s.mp4", timeStamp);
+        } else {
+            outFileName = String.format("JPEG_%s.jpg", timeStamp);
+        }
+
         File storageDir;
         if (mCaptureStrategy.isPublic) {
             storageDir = Environment.getExternalStoragePublicDirectory(
@@ -130,7 +137,7 @@ public class MediaStoreCompat {
         }
 
         // Avoid joining path components manually
-        File tempFile = new File(storageDir, imageFileName);
+        File tempFile = new File(storageDir, outFileName);
 
         // Handle the situation that user's external storage is not ready
         if (!Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(tempFile))) {
@@ -140,11 +147,11 @@ public class MediaStoreCompat {
         return tempFile;
     }
 
-    public Uri getCurrentPhotoUri() {
-        return mCurrentPhotoUri;
+    public Uri getCurrentUri() {
+        return mCurrentUri;
     }
 
-    public String getCurrentPhotoPath() {
-        return mCurrentPhotoPath;
+    public String getCurrentPath() {
+        return mCurrentPath;
     }
 }

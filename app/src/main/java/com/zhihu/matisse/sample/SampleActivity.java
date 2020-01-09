@@ -87,7 +87,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .countable(true)
                         .capture(true)
                         .captureStrategy(
-                                new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "test"))
+                                new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "image"))
                         .maxSelectable(9)
                         .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
                         .gridExpectedSize(
@@ -140,7 +140,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                 Matisse.from(SampleActivity.this)
                         .choose(MimeType.of(MimeType.MP4), false)
                         .captureStrategy(
-                                new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "test"))
+                                new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "video"))
                         .capture(true)
                         .countable(true)
                         .maxSelectable(9)
