@@ -1,2 +1,2 @@
 include ':app', ':matisse'
-rootProject.name='matisse-kotlin'
+rootProject.name='Matisse-kotlin'

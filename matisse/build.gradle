@@ -2,14 +2,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+group = 'com.github.banketree'
 
+def androidConfig = rootProject.ext.android
+def dependence = rootProject.ext.dependence
+
+android {
+    compileSdkVersion androidConfig.compileSdkVersion
+    buildToolsVersion androidConfig.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 29
+        minSdkVersion androidConfig.minSdkVersion
+        targetSdkVersion androidConfig.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -36,15 +40,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
 
-    implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.annotation:annotation:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation dependence['kotlin-stdlib-jdk7']
+    implementation dependence['appcompat']
+    implementation dependence['core-ktx']
+    implementation dependence['constraintlayout']
+
+    implementation dependence["material"]
+    compileOnly dependence["glide"]
+    compileOnly dependence["picasso"]
+
     implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
-
-    compileOnly 'com.github.bumptech.glide:glide:4.9.0'
-    compileOnly 'com.squareup.picasso:picasso:2.5.2'
 }
