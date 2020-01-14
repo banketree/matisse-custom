@@ -17,6 +17,7 @@ package com.zhihu.matisse.sample;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -39,6 +40,9 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.listener.ICaptureListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -85,7 +89,12 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                 Matisse.from(SampleActivity.this)
                         .choose(MimeType.ofImage(), false)
                         .countable(true)
-                        .capture(true)
+                        .capture(true, new ICaptureListener() {
+                            @Override
+                            public boolean onCaptureListener(@NotNull Context context, int requestCode, boolean isVideo) {
+                                return true;
+                            }
+                        })
                         .captureStrategy(
                                 new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "image"))
                         .maxSelectable(9)
@@ -141,7 +150,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .choose(MimeType.of(MimeType.MP4), false)
                         .captureStrategy(
                                 new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider", "video"))
-                        .capture(true)
+                        .capture(true, null)
                         .countable(true)
                         .maxSelectable(9)
 //                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))

@@ -31,6 +31,7 @@ import com.zhihu.matisse.engine.ImageEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
+import com.zhihu.matisse.listener.ICaptureListener;
 import com.zhihu.matisse.listener.OnCheckedListener;
 import com.zhihu.matisse.listener.OnSelectedListener;
 import com.zhihu.matisse.ui.MatisseActivity;
@@ -164,7 +165,7 @@ public final class SelectionCreator {
      *
      * @param maxImageSelectable Maximum selectable count for image.
      * @param maxVideoSelectable Maximum selectable count for video.
-     * @return  {@link SelectionCreator} for fluent API.
+     * @return {@link SelectionCreator} for fluent API.
      */
     public SelectionCreator maxSelectablePerMediaType(int maxImageSelectable, int maxVideoSelectable) {
         if (maxImageSelectable < 1 || maxVideoSelectable < 1)
@@ -198,8 +199,9 @@ public final class SelectionCreator {
      * @param enable Whether to enable capturing or not. Default value is false;
      * @return {@link SelectionCreator} for fluent API.
      */
-    public SelectionCreator capture(boolean enable) {
+    public SelectionCreator capture(boolean enable, ICaptureListener iCaptureListener) {
         mSelectionSpec.capture = enable;
+        mSelectionSpec.iCaptureListener = iCaptureListener;
         return this;
     }
 
@@ -217,6 +219,7 @@ public final class SelectionCreator {
 
     /**
      * Determines Whether to hide top and bottom toolbar in PreView mode ,when user tap the picture
+     *
      * @param enable
      * @return {@link SelectionCreator} for fluent API.
      */

@@ -433,6 +433,11 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     public void capture() {
+        //外层拦截处理
+        if (mSpec.iCaptureListener != null && mSpec.iCaptureListener.onCaptureListener(this, REQUEST_CODE_CAPTURE, mSpec.onlyShowVideos())) {
+            finish();
+            return;
+        }
         if (mMediaStoreCompat != null) {
             mMediaStoreCompat.dispatchCaptureIntent(this, REQUEST_CODE_CAPTURE, mSpec.onlyShowVideos());
         }
