@@ -1,3 +1,4 @@
 include ':app', ':matisse'
 rootProject.name='Matisse-kotlin'
 include ':luban'
+include ':compressor'
