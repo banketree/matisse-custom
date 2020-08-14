@@ -191,41 +191,38 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
             mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
             Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
             List<String> paths = Matisse.obtainPathResult(data);
+//            TestCompressor.INSTANCE.test(this, paths);
 
-            TestCompressor.INSTANCE.test(this, paths);
+            List<LocalMedia> result = new ArrayList<>();
+            for (String path : paths) {
+                LocalMedia test = new LocalMedia();
+                test.setPath(path);
+                result.add(test);
+            }
 
-//            List<LocalMedia> result = new ArrayList<>();
-//            for (String path : paths) {
-//                LocalMedia test = new LocalMedia();
-//                test.setPath(path);
-//                result.add(test);
-//            }
-//
-//            String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            Luban.with(this)
-//                    .loadMediaData(result)
-//                    .ignoreBy(60)
-//                    .isCamera(true)
-//                    .setCompressQuality(80)
-//                    .setFocusAlpha(false)
-//                    .setTargetDir(absolutePath + "/1/")
-//                    .setCompressListener(new OnCompressListener() {
-//                        @Override
-//                        public void onStart() {
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(List<LocalMedia> list) {
-//                            Log.i("onSuccess", "list: " + list);
-//                        }
-//
-//                        @Override
-//                        public void onError(Throwable e) {
-//                            Log.e("onError", "e: " + e);
-//                        }
-//                    }).launch();
+            String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Luban.with(this)
+                    .loadMediaData(result)
+                    .ignoreBy(60)
+                    .isCamera(true)
+                    .setCompressQuality(60)
+                    .setFocusAlpha(false)
+                    .setTargetDir(absolutePath + "/1/")
+                    .setCompressListener(new OnCompressListener() {
+                        @Override
+                        public void onStart() {
+                        }
 
-//            new Compressor().compress()
+                        @Override
+                        public void onSuccess(List<LocalMedia> list) {
+                            Log.i("onSuccess", "list: " + list);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("onError", "e: " + e);
+                        }
+                    }).launch();
 
 
         }
