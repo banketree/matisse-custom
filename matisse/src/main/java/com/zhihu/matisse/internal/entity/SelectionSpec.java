@@ -68,6 +68,7 @@ public final class SelectionSpec {
     }
 
     public static SelectionSpec getCleanInstance() {
+        InstanceHolder.reset();
         SelectionSpec selectionSpec = getInstance();
         selectionSpec.reset();
         return selectionSpec;
@@ -119,6 +120,10 @@ public final class SelectionSpec {
     }
 
     private static final class InstanceHolder {
-        private static final SelectionSpec INSTANCE = new SelectionSpec();
+        private static SelectionSpec INSTANCE = new SelectionSpec();
+
+        private static void reset() {
+            INSTANCE = new SelectionSpec();
+        }
     }
 }

@@ -101,7 +101,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                 Matisse.from(SampleActivity.this)
                         .choose(MimeType.ofImage(), false)
                         .countable(true)
-                        .capture(true, new ICaptureListener() {
+                        .capture(false, new ICaptureListener() {
                             @Override
                             public boolean onCaptureListener(@NotNull Context context, int requestCode, boolean isVideo) {
                                 return true;
