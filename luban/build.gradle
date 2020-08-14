@@ -1,6 +1,8 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+group = 'com.github.banketree'
 
 def androidConfig = rootProject.ext.android
 def dependence = rootProject.ext.dependence
@@ -8,14 +10,25 @@ def dependence = rootProject.ext.dependence
 android {
     compileSdkVersion androidConfig.compileSdkVersion
     buildToolsVersion androidConfig.buildToolsVersion
+
     defaultConfig {
-        applicationId "com.zhihu.matisse.sample"
         minSdkVersion androidConfig.minSdkVersion
         targetSdkVersion androidConfig.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,13 +36,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
@@ -38,14 +44,5 @@ dependencies {
     implementation dependence['kotlin-stdlib-jdk7']
     implementation dependence['appcompat']
     implementation dependence['core-ktx']
-    implementation dependence['constraintlayout']
-
-    implementation dependence["material"]
-    implementation dependence["rxpermissions2"]
-    implementation dependence["rxjava2"]
-    implementation dependence["glide"]
-    implementation dependence["picasso"]
-
-    implementation project(':matisse')
-    implementation project(':luban')
+    implementation dependence['okio']
 }

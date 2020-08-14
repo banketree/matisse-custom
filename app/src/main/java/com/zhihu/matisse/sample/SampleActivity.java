@@ -22,6 +22,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +46,13 @@ import com.zhihu.matisse.listener.ICaptureListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
+import top.zibin.luban.beans.LocalMedia;
 
 public class SampleActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,6 +72,9 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new UriAdapter());
+
+        new RxPermissions(this).requestEach("android.permission.WRITE_EXTERNAL_STORAGE",
+                "android.permission.READ_EXTERNAL_STORAGE");
     }
 
     // <editor-fold defaultstate="collapsed" desc="onClick">
@@ -71,7 +82,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(final View v) {
         RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
                         startAction(v);
@@ -178,6 +189,37 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
             Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
+            List<String> paths = Matisse.obtainPathResult(data);
+            List<LocalMedia> result = new ArrayList<>();
+            for (String path : paths) {
+                LocalMedia test = new LocalMedia();
+                test.setPath(path);
+                result.add(test);
+            }
+
+            String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Luban.with(this)
+                    .loadMediaData(result)
+                    .ignoreBy(60)
+                    .isCamera(true)
+                    .setCompressQuality(80)
+                    .setFocusAlpha(false)
+                    .setTargetDir(absolutePath + "/1/")
+                    .setCompressListener(new OnCompressListener() {
+                        @Override
+                        public void onStart() {
+                        }
+
+                        @Override
+                        public void onSuccess(List<LocalMedia> list) {
+                            Log.i("onSuccess", "list: " + list);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("onError", "e: " + e);
+                        }
+                    }).launch();
         }
     }
 
