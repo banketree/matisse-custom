@@ -123,6 +123,10 @@ public final class SelectionSpec {
         private static SelectionSpec INSTANCE = new SelectionSpec();
 
         private static void reset() {
+            if (INSTANCE != null) {
+                INSTANCE.reset();
+                INSTANCE = null;
+            }
             INSTANCE = new SelectionSpec();
         }
     }
